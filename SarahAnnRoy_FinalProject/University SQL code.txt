@@ -1,0 +1,483 @@
+Microsoft Windows [Version 10.0.17763.805]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Users\Sarah Roy>cd C:\db
+
+C:\db>sqlite3
+SQLite version 3.29.0 2019-07-10 17:32:03
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open University.db;
+sqlite> .databases
+main: C:\db\University.db;
+sqlite> PRAGMA foreign_keys =ON;
+sqlite> CREATE TABLE Student(
+   ...> StudentId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> CatalogYear INTEGER NOT NULL,
+   ...> StudentAddress VARCHAR(255) NOT NULL,
+   ...> DateOfBirth DATE NOT NULL,
+   ...> StudentEmail VARCHAR(255) NOT NULL,
+   ...> StudentName VARCHAR(255) NOT NULL,
+   ...> CONSTRAINT UK_StudentName UNIQUE(StudentName)
+   ...> );
+sqlite> CREATE TABLE Course(
+   ...> CourseId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> Year YEAR NULL,
+   ...> Credits INTEGER NOT NULL,
+   ...> Department VARCHAR(255) NOT NULL,
+   ...> DepartmentId INTEGER NOT NULL,
+   ...> CourseName VARCHAR(255) NOT NULL,
+   ...>
+Error: incomplete input
+
+C:\db>sqlite3
+SQLite version 3.29.0 2019-07-10 17:32:03
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open University.db;
+sqlite> .tables
+Student
+sqlite>  CREATE TABLE Course(
+   ...>  CourseId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...>  Year YEAR NULL,
+   ...> Credits INTEGER NOT NULL,
+   ...>  Department VARCHAR(255) NOT NULL,
+   ...>  DepartmentId INTEGER NOT NULL,
+   ...> CourseName VARCHAR(255) NOT NULL,
+   ...> CONSTRAINT UK_CourseName UNIQUE(CourseName),
+   ...> CONSTRAINT FK_Department_2_Course_CourseId FOREIGN KEY(DepartmentId)REFERENCES Course(CourseId)
+   ...> );
+sqlite> .tables
+Course   Student
+sqlite> CREATE TABLE Department(
+   ...> DepartmentId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> DepartmentHead VARCHAR(255) NOT NULL,
+   ...> DepartmentEmail VARCHAR(255) NOT NULL,
+   ...> DepartmentName VARCHAR(255) NOT NULL,
+   ...> CONSTRAINT UK_DepartmentName UNIQUE(DepartmentId)
+   ...> );
+sqlite> CREATE TABLE Professor(
+   ...> ProfessorId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> ProfessorEmail VARCHAR(255) NOT NULL,
+   ...> ContactNumber VARCHAR(255) NOT NULL,
+   ...> ProfessorName VARCHAR(255) NOT NULL,
+   ...> CONSTRAINT UK_ProfessorName UNIQUE(ProfessorName)
+   ...> );
+sqlite> .tables
+Course      Department  Professor   Student
+sqlite> CREATE TABLE College(
+   ...> CollegeId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> CollegeAddress VARCHAR(255) NOT NULL,
+   ...> CollegeName VARCHAR(255) NOT NULL,
+   ...> CONSTRAINT UK_CollegeName UNIQUE(CollegeName)
+   ...> );
+sqlite>  CREATE TABLE Course(
+   ...> ;
+Error: table Course already exists
+sqlite> CREATE TABLE Courses(
+   ...> ;
+Error: near ";": syntax error
+sqlite> DROP TABLE Course;
+sqlite> .tables
+College     Department  Professor   Student
+sqlite>  CREATE TABLE Course(
+   ...>  CourseId INTEGER PRIMARY KEY AUTOINCREMENT,
+   ...> Year YEAR NULL,
+   ...> Credits INTEGER NOT NULL,
+   ...> Department VARCHAR(255) NOT NULL,
+   ...> DepartmentId INTEGER NOT NULL,
+   ...> CourseName VARCHAR(255) NOT NULL,
+   ...> Percentage DECIMAL(10,5) CHECK(Percentage BETWEEN 0 AND 100),
+   ...> CONSTRAINT UK_CourseName UNIQUE(CourseName),
+   ...> CONSTRAINT FK_Department_2_Course_CourseId FOREIGN KEY(DepartmentId)REFERENCES Course(CourseId)
+   ...> );
+sqlite> .tables
+College     Course      Department  Professor   Student
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...> (1010, 2010, ‘Peterborough’, 23-01-1992, ‘michaelscott@trentu.ca’, ‘Michael Scott’);
+sqlite> Select * from Student;
+1010|2010|Peterborough|-1970|michaelscott@trentu.ca|Michael Scott
+sqlite> DELETE FROM Student WHERE StudentName='Michael Scott';
+sqlite> Select * from Student;
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...> (1010, 2010, 'Peterborough','1992-01-23','michaelscott@trentu.ca', 'Michael Scott');
+sqlite> Select * from Student;
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+sqlite>  INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...> (1020, 2013, ‘Peterborough’, '1995-02-20', ‘dwightschrute@trentu.ca’,  ‘Dwight Schrute’)
+   ...> (1030, 2016, 'Barrie','1998-03-06','jimhalpert@trentu.ca', 'Jim Halpert')
+   ...> (1040, 2008, ‘Peterborough’, ‘1990-04-17’, ‘pambeesly@trentu.ca’, ‘Pam Beesly’),
+   ...> (1050, 2019, ‘Vaughn’, ‘2001-05-08’, ‘ryanhoward@trentu.ca’, ‘Ryan Howard’),
+   ...> (1060, 2010, ‘Lindsay’, ‘1992-06-16’, ‘andrewbernard@trentu.ca’, ‘Andrew Bernard’),
+   ...> (1070, 1975, ‘Oshawa’, ‘1957-07-04’, ‘stanleyhudson@trentu.ca’, ‘Stanley Hudson’),
+   ...> (1080, 2019, ‘Peterborough’, ‘2001-08-21’, ‘angelamartin@trentu.ca’, ‘Angela Martin’),
+   ...> (1090, 2018, ‘Durham’, ‘2000-09-30’, ‘oscarmartinez@trentu.ca’, ‘Oscar Martinez’),
+   ...> (1100, 2018, ‘Peterborough’, ‘2000-10-25’, ‘kellykapoor@trentu.ca’, ‘Kelly Kapoor’);
+Error: near "(": syntax error
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...> (1020, 2013, ‘Peterborough’, '1995-02-20', ‘dwightschrute@trentu.ca’,  ‘Dwight Schrute’);
+sqlite>  (1030, 2016, 'Barrie','1998-03-06','jimhalpert@trentu.ca', 'Jim Halpert');
+Error: near "(": syntax error
+sqlite>  INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...> (1030, 2016, 'Barrie', '1998-03-06', 'jimhalpert@trentu.ca', 'Jim Halpert');
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...>    ...> VALUES
+   ...> (1040, 2008, ‘Peterborough’, ‘1990-04-17’, ‘pambeesly@trentu.ca’, ‘Pam Beesly’);
+Error: near ".": syntax error
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName)
+   ...> VALUES
+   ...>  (1040, 2008, ‘Peterborough’, ‘1990-04-17’, ‘pambeesly@trentu.ca’, ‘Pam Beesly’);
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...>  (1050, 2019, ‘Vaughn’, ‘2001-05-08’, ‘ryanhoward@trentu.ca’, ‘Ryan Howard’);
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...> (1060, 2010, ‘Lindsay’, ‘1992-06-16’, ‘andrewbernard@trentu.ca’, ‘Andrew Bernard’);
+sqlite>  INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...> (1070, 1975, ‘Oshawa’, ‘1957-07-04’, ‘stanleyhudson@trentu.ca’, ‘Stanley Hudson’);
+sqlite> INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...>  (1080, 2019, ‘Peterborough’, ‘2001-08-21’, ‘angelamartin@trentu.ca’, ‘Angela Martin’);
+sqlite>  INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...> (1090, 2018, ‘Durham’, ‘2000-09-30’, ‘oscarmartinez@trentu.ca’, ‘Oscar Martinez’);
+sqlite>  INSERT INTO Student (StudentId, CatalogYear, StudentAddress, DateOfBirth, StudentEmail, StudentName) VALUES
+   ...>  (1100, 2018, ‘Peterborough’, ‘2000-10-25’, ‘kellykapoor@trentu.ca’, ‘Kelly Kapoor’);
+sqlite> Select * from Student;
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+1020|2013|Peterborough|1995-02-20|dwightschrute@trentu.ca|Dwight Schrute
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1040|2008|Peterborough|1990-04-17|pambeesly@trentu.ca|Pam Beesly
+1050|2019|Vaughn|2001-05-08|ryanhoward@trentu.ca|Ryan Howard
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+1080|2019|Peterborough|2001-08-21|angelamartin@trentu.ca|Angela Martin
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+1100|2018|Peterborough|2000-10-25|kellykapoor@trentu.ca|Kelly Kapoor
+sqlite> INSERT INTO Course (CourseId, Credits, Year, Department, CourseName, Percentage)VALUES
+   ...> (1001, 0.5, ‘2008’, ‘Physics’, ‘Introduction to Physics I’, 67.70);
+Error: NOT NULL constraint failed: Course.DepartmentId
+sqlite> INSERT INTO Course (CourseId, Credits, Year, Department, DepartmentId, CourseName, Percentage)VALUES
+   ...> (1001, 0.5, ‘2008’, ‘Physics’, 6020, ‘Introduction to Physics I’, 67.70);
+sqlite> Select * from Course;
+1001|2008|0.5|Physics|6020|Introduction to Physics I|67.7
+sqlite> INSERT INTO Course (CourseId, Credits, Year, Department, DepartmentId, CourseName, Percentage)VALUES
+   ...> (1000, 1.0, ‘2006’, ‘Chemistry’, 6030, ‘Introduction to Chemistry’, 57.7),
+   ...> (1020, 1.0, ‘2002’, ‘Biology’, 6040, ‘Introduction to Biology I’, 94.3),
+   ...> (1010, 0.5, ‘2003’, ‘Computer Science’, 6010, ‘Introduction to Computer Science’, 86.4),
+   ...> (1005, 0.5, ‘2005’, ‘Mathematics’, 6070, ‘Calculus I’, 79.9),
+   ...> (1011, 0.5, ‘2010’, ‘Forensic Science’, 6060, ‘Introduction to Forensic Science I’, 90.2),
+   ...> (2010, 0.5, ‘2012’, ‘Business Administration’, 6080, ‘Building Management Skills’, 83.3),
+   ...> (1901, 1.0, ‘2011’, ‘History’, 6090, ‘History of Science and Technology’, 77.9),
+   ...> (1002, 0.5, ‘2004’, ‘Indigenous Studies’, 6050, ‘Critical Incidents in Indigenous Lives’, 54.1),
+   ...> (1030, 1.0, ‘2000’, ‘Nursing’, 6100, ‘Introduction to Nursing I’, 96.2);
+sqlite> Select * from Course;
+1000|2006|1|Chemistry|6030|Introduction to Chemistry|57.7
+1001|2008|0.5|Physics|6020|Introduction to Physics I|67.7
+1002|2004|0.5|Indigenous Studies|6050|Critical Incidents in Indigenous Lives|54.1
+1005|2005|0.5|Mathematics|6070|Calculus I|79.9
+1010|2003|0.5|Computer Science|6010|Introduction to Computer Science|86.4
+1011|2010|0.5|Forensic Science|6060|Introduction to Forensic Science I|90.2
+1020|2002|1|Biology|6040|Introduction to Biology I|94.3
+1030|2000|1|Nursing|6100|Introduction to Nursing I|96.2
+1901|2011|1|History|6090|History of Science and Technology|77.9
+2010|2012|0.5|Business Administration|6080|Building Management Skills|83.3
+sqlite> INSERT INTO Professor (ProfessorId, ProfessorEmail, ProfessorName, Department, ContactNumber)VALUES
+   ...> (8010,  ‘rachelgreen@trentu.ca’, ‘Rachel Green’, ‘Computer Science’, ‘705-123-4567’),
+   ...> (8020, ‘monicageller@trentu.ca’,  ‘Monica Geller’, ‘Physics’, ‘705-098-7654’),
+   ...> (8030, ‘pheobebuffay@trentu.ca’, ‘Pheobe Buffay’, ‘Chemistry’, ‘705-345-5678’),
+   ...> (8040,  ‘joeytribbiani@trentu.ca’, ‘Joey Tribbiani’, ‘Biology’, ‘705-623-6785’),
+   ...> (8050, ‘chandlerbing@trentu.ca’, ‘Chandler Bing’, ‘Indigenous Studies’, ‘705-234-7456’),
+   ...> (8060, ‘rossgeller@trentu.ca’, ‘Ross Geller’, ‘Forensic Science’, ‘705-723-7484’),
+   ...> (8070, ‘janicelgh@trentu.ca’, ‘Janice Litman-Goralnik Hosenstein’, ‘Mathematics’, ‘705-277-9777’),
+   ...> (8080, ‘ursualbuffay@trentu.ca’, ‘Ursula Buffay’, ‘Business Administration’, ‘705-622-4182’),
+   ...> (8090, ‘richardburke@trentu.ca’, ‘Richard Burke’, ‘History’, ‘705-186-7051’),
+   ...> (8100, ‘gunthersmith@trentu.ca’, ‘Gunther Smith’, ‘Nursing’, ‘705-455-6126’);
+Error: table Professor has no column named Department
+sqlite> INSERT INTO Professor (ProfessorId, ProfessorEmail, ProfessorName, ContactNumber)VALUES
+   ...> (8010,  ‘rachelgreen@trentu.ca’, ‘Rachel Green’, ‘705-123-4567’);
+sqlite> INSERT INTO Professor (ProfessorId, ProfessorEmail, ProfessorName, ContactNumber)VALUES
+   ...> (8020, ‘monicageller@trentu.ca’,  ‘Monica Geller’, ‘705-098-7654’),(8030, ‘pheobebuffay@trentu.ca’, ‘Pheobe Buffay’, ‘705-345-5678’),(8040,  ‘joeytribbiani@trentu.ca’, ‘Joey Tribbiani’, ‘705-623-6785’),(8050, ‘chandlerbing@trentu.ca’, ‘Chandler Bing’, ‘705-234-7456’),(8060, ‘rossgeller@trentu.ca’, ‘Ross Geller’, ‘705-723-7484’),(8070, ‘janicelgh@trentu.ca’, ‘Janice Litman-Goralnik Hosenstein’, ‘705-277-9777’),(8080, ‘ursualbuffay@trentu.ca’, ‘Ursula Buffay’, ‘705-622-4182’),(8090, ‘richardburke@trentu.ca’, ‘Richard Burke’, ‘705-186-7051’),(8100, ‘gunthersmith@trentu.ca’, ‘Gunther Smith’,‘705-455-6126’);
+sqlite> Select * from Professor;
+8010|rachelgreen@trentu.ca|705-123-4567|Rachel Green
+8020|monicageller@trentu.ca|705-098-7654|Monica Geller
+8030|pheobebuffay@trentu.ca|705-345-5678|Pheobe Buffay
+8040|joeytribbiani@trentu.ca|705-623-6785|Joey Tribbiani
+8050|chandlerbing@trentu.ca|705-234-7456|Chandler Bing
+8060|rossgeller@trentu.ca|705-723-7484|Ross Geller
+8070|janicelgh@trentu.ca|705-277-9777|Janice Litman-Goralnik Hosenstein
+8080|ursualbuffay@trentu.ca|705-622-4182|Ursula Buffay
+8090|richardburke@trentu.ca|705-186-7051|Richard Burke
+8100|gunthersmith@trentu.ca|705-455-6126|Gunther Smith
+sqlite> INSERT INTO Department (DepartmentId, DepartmentHead, DepartmentEmail, DepartmentName)VALUES
+   ...> (6010, ‘Ned Stark’, ‘computerscience@trentu.ca’, ‘Computer Science’);
+sqlite> INSERT INTO Department (DepartmentId, DepartmentHead, DepartmentEmail, DepartmentName)VALUES
+   ...> (6020, ‘Theon Greyjoy’, ‘physics@trentu.ca’, ‘Physics’),(6030, ‘Jon Snow’, ‘chemistry@trentu.ca’, ‘Chemistry’),(6040, ‘Daenerys Targaryen’, ‘biology@trentu.ca’, ‘Biology’),(6050, ‘Cersei Lannister’, ‘indgstudies@trentu.ca’, ‘Indigenous Studies’),(6060, ‘Robert Baratheon’,  ‘forensicscience@trentu.ca’, ‘Forensic Science’),(6070, ‘Catelyn Tully’, ‘math@trentu.ca’, ‘Mathematics’),(6080, ‘Jorah Mormont’, ‘admn@trentu.ca’, ‘Business Administration’),(6090, ‘Davos Seaworth’, ‘history@trentu.ca’, ‘History’),(6100, ‘Samwell Tarly’,’nursing@trentu.ca’, ‘Nursing’);
+sqlite> Select * from Department;
+6010|Ned Stark|computerscience@trentu.ca|Computer Science
+6020|Theon Greyjoy|physics@trentu.ca|Physics
+6030|Jon Snow|chemistry@trentu.ca|Chemistry
+6040|Daenerys Targaryen|biology@trentu.ca|Biology
+6050|Cersei Lannister|indgstudies@trentu.ca|Indigenous Studies
+6060|Robert Baratheon|forensicscience@trentu.ca|Forensic Science
+6070|Catelyn Tully|math@trentu.ca|Mathematics
+6080|Jorah Mormont|admn@trentu.ca|Business Administration
+6090|Davos Seaworth|history@trentu.ca|History
+6100|Samwell Tarly|nursing@trentu.ca|Nursing
+sqlite> INSERT INTO College (CollegeId, CollegeAddress, CollegeName)VALUES
+   ...> (7010, ‘Peterborough’, ‘Peter Gzowski College’),
+   ...> ;
+Error: near ";": syntax error
+sqlite>  INSERT INTO College (CollegeId, CollegeAddress, CollegeName)VALUES
+   ...> (7010, ‘Peterborough’, ‘Peter Gzowski College’);
+sqlite> INSERT INTO College (CollegeId, CollegeAddress, CollegeName)VALUES
+   ...> (7020, ‘Peterborough’, ‘Otonabee College’),(7030, ‘Peterborough’, ‘Champlain College’),(7040, ‘Peterborough’, ‘Lady Eaton College’),(7050, ‘Peterborough’, ‘Catherine Par Traill’),(7060, ‘Peterborough’, ‘Fleming College’),(7070, ‘Toronto’, ‘Victoria College’),(7080, ‘Toronto’, ‘Trinity College’),(7090, ‘Toronto’, ‘St. Michaels College’),(7100, ‘Toronto’, ‘Woodsworth College’);
+sqlite> Select * from College;
+7010|Peterborough|Peter Gzowski College
+7020|Peterborough|Otonabee College
+7030|Peterborough|Champlain College
+7040|Peterborough|Lady Eaton College
+7050|Peterborough|Catherine Par Traill
+7060|Peterborough|Fleming College
+7070|Toronto|Victoria College
+7080|Toronto|Trinity College
+7090|Toronto|St. Michaels College
+7100|Toronto|Woodsworth College
+sqlite> Select * from Course;
+1000|2006|1|Chemistry|6030|Introduction to Chemistry|57.7
+1001|2008|0.5|Physics|6020|Introduction to Physics I|67.7
+1002|2004|0.5|Indigenous Studies|6050|Critical Incidents in Indigenous Lives|54.1
+1005|2005|0.5|Mathematics|6070|Calculus I|79.9
+1010|2003|0.5|Computer Science|6010|Introduction to Computer Science|86.4
+1011|2010|0.5|Forensic Science|6060|Introduction to Forensic Science I|90.2
+1020|2002|1|Biology|6040|Introduction to Biology I|94.3
+1030|2000|1|Nursing|6100|Introduction to Nursing I|96.2
+1901|2011|1|History|6090|History of Science and Technology|77.9
+2010|2012|0.5|Business Administration|6080|Building Management Skills|83.3
+sqlite> Select * from Student;
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+1020|2013|Peterborough|1995-02-20|dwightschrute@trentu.ca|Dwight Schrute
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1040|2008|Peterborough|1990-04-17|pambeesly@trentu.ca|Pam Beesly
+1050|2019|Vaughn|2001-05-08|ryanhoward@trentu.ca|Ryan Howard
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+1080|2019|Peterborough|2001-08-21|angelamartin@trentu.ca|Angela Martin
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+1100|2018|Peterborough|2000-10-25|kellykapoor@trentu.ca|Kelly Kapoor
+sqlite> Select * from Student;
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+1020|2013|Peterborough|1995-02-20|dwightschrute@trentu.ca|Dwight Schrute
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1040|2008|Peterborough|1990-04-17|pambeesly@trentu.ca|Pam Beesly
+1050|2019|Vaughn|2001-05-08|ryanhoward@trentu.ca|Ryan Howard
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+1080|2019|Peterborough|2001-08-21|angelamartin@trentu.ca|Angela Martin
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+1100|2018|Peterborough|2000-10-25|kellykapoor@trentu.ca|Kelly Kapoor
+sqlite> Select * from Department;
+6010|Ned Stark|computerscience@trentu.ca|Computer Science
+6020|Theon Greyjoy|physics@trentu.ca|Physics
+6030|Jon Snow|chemistry@trentu.ca|Chemistry
+6040|Daenerys Targaryen|biology@trentu.ca|Biology
+6050|Cersei Lannister|indgstudies@trentu.ca|Indigenous Studies
+6060|Robert Baratheon|forensicscience@trentu.ca|Forensic Science
+6070|Catelyn Tully|math@trentu.ca|Mathematics
+6080|Jorah Mormont|admn@trentu.ca|Business Administration
+6090|Davos Seaworth|history@trentu.ca|History
+6100|Samwell Tarly|nursing@trentu.ca|Nursing
+sqlite> Select * from Professor;
+8010|rachelgreen@trentu.ca|705-123-4567|Rachel Green
+8020|monicageller@trentu.ca|705-098-7654|Monica Geller
+8030|pheobebuffay@trentu.ca|705-345-5678|Pheobe Buffay
+8040|joeytribbiani@trentu.ca|705-623-6785|Joey Tribbiani
+8050|chandlerbing@trentu.ca|705-234-7456|Chandler Bing
+8060|rossgeller@trentu.ca|705-723-7484|Ross Geller
+8070|janicelgh@trentu.ca|705-277-9777|Janice Litman-Goralnik Hosenstein
+8080|ursualbuffay@trentu.ca|705-622-4182|Ursula Buffay
+8090|richardburke@trentu.ca|705-186-7051|Richard Burke
+8100|gunthersmith@trentu.ca|705-455-6126|Gunther Smith
+sqlite> Select * from Student WHERE StudentAddress != 'Peterborough';
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1050|2019|Vaughn|2001-05-08|ryanhoward@trentu.ca|Ryan Howard
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+sqlite> Select * from Course WHERE Department = 'Computer Science' AND Credits = 0.5;
+1010|2003|0.5|Computer Science|6010|Introduction to Computer Science|86.4
+sqlite> SELECT * FROM Professor ORDER BY ProfessorName;
+8050|chandlerbing@trentu.ca|705-234-7456|Chandler Bing
+8100|gunthersmith@trentu.ca|705-455-6126|Gunther Smith
+8070|janicelgh@trentu.ca|705-277-9777|Janice Litman-Goralnik Hosenstein
+8040|joeytribbiani@trentu.ca|705-623-6785|Joey Tribbiani
+8020|monicageller@trentu.ca|705-098-7654|Monica Geller
+8030|pheobebuffay@trentu.ca|705-345-5678|Pheobe Buffay
+8010|rachelgreen@trentu.ca|705-123-4567|Rachel Green
+8090|richardburke@trentu.ca|705-186-7051|Richard Burke
+8060|rossgeller@trentu.ca|705-723-7484|Ross Geller
+8080|ursualbuffay@trentu.ca|705-622-4182|Ursula Buffay
+sqlite> Select * from Student WHERE DateOfBirth < '2000-01-01';
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+1020|2013|Peterborough|1995-02-20|dwightschrute@trentu.ca|Dwight Schrute
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1040|2008|Peterborough|1990-04-17|pambeesly@trentu.ca|Pam Beesly
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+sqlite> Select DepartmentHead,DepartmentName from Department WHERE DepartmentName = 'History';
+Davos Seaworth|History
+sqlite> Select CourseId, Department,Percentage from Course WHERE Department = 'Physics' AND CourseId = 1001;
+1001|Physics|67.7
+sqlite> Select * from Student WHERE CatalogYear = '2018';
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+1100|2018|Peterborough|2000-10-25|kellykapoor@trentu.ca|Kelly Kapoor
+sqlite> Select COUNT(*) from Course WHERE Department = 'Nursing';
+1
+sqlite> sqlite> Select COUNT(*) from Course WHERE Department = 'Nursing';
+Error: near "sqlite": syntax error
+sqlite> Select Count(*), CourseId, CourseName, Percentage WHERE Percentage > 75.0;
+Error: no such column: CourseId
+sqlite> Select Count(*), CourseId, CourseName, Percentage from Course WHERE Percentage > 75.0;
+7|1005|Calculus I|79.9
+sqlite> Select Count(*) from Course WHERE Percentage > 75.0;
+7
+sqlite> Select * from Student WHERE StudentName = "A%" OR "M%" OR "S%";
+sqlite> Select * from Student WHERE StudentName = 'A%' OR 'M%' OR 'S%';
+sqlite> Select * from Student;
+1010|2010|Peterborough|1992-01-23|michaelscott@trentu.ca|Michael Scott
+1020|2013|Peterborough|1995-02-20|dwightschrute@trentu.ca|Dwight Schrute
+1030|2016|Barrie|1998-03-06|jimhalpert@trentu.ca|Jim Halpert
+1040|2008|Peterborough|1990-04-17|pambeesly@trentu.ca|Pam Beesly
+1050|2019|Vaughn|2001-05-08|ryanhoward@trentu.ca|Ryan Howard
+1060|2010|Lindsay|1992-06-16|andrewbernard@trentu.ca|Andrew Bernard
+1070|1975|Oshawa|1957-07-04|stanleyhudson@trentu.ca|Stanley Hudson
+1080|2019|Peterborough|2001-08-21|angelamartin@trentu.ca|Angela Martin
+1090|2018|Durham|2000-09-30|oscarmartinez@trentu.ca|Oscar Martinez
+1100|2018|Peterborough|2000-10-25|kellykapoor@trentu.ca|Kelly Kapoor
+sqlite> .tables
+College     Course      Department  Professor   Student
+sqlite> Select AVG(*) from Course;
+Error: wrong number of arguments to function AVG()
+sqlite> Select avg(Percentage) from Course;
+78.77
+sqlite> Select CoursId, CourseName, Credits, Department from Course WHERE Department = 'Chemistry';
+Error: no such column: CoursId
+sqlite> Select CourseId, CourseName, Credits, Department from Course WHERE Department = 'Chemistry';
+1000|Introduction to Chemistry|1|Chemistry
+
+sqlite> .dump Student
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Student(
+StudentId INTEGER PRIMARY KEY AUTOINCREMENT,
+CatalogYear INTEGER NOT NULL,
+StudentAddress VARCHAR(255) NOT NULL,
+DateOfBirth DATE NOT NULL,
+StudentEmail VARCHAR(255) NOT NULL,
+StudentName VARCHAR(255) NOT NULL,
+CONSTRAINT UK_StudentName UNIQUE(StudentName)
+);
+INSERT INTO Student VALUES(1010,2010,'Peterborough','1992-01-23','michaelscott@trentu.ca','Michael Scott');
+INSERT INTO Student VALUES(1020,2013,'Peterborough','1995-02-20','dwightschrute@trentu.ca','Dwight Schrute');
+INSERT INTO Student VALUES(1030,2016,'Barrie','1998-03-06','jimhalpert@trentu.ca','Jim Halpert');
+INSERT INTO Student VALUES(1040,2008,'Peterborough','1990-04-17','pambeesly@trentu.ca','Pam Beesly');
+INSERT INTO Student VALUES(1050,2019,'Vaughn','2001-05-08','ryanhoward@trentu.ca','Ryan Howard');
+INSERT INTO Student VALUES(1060,2010,'Lindsay','1992-06-16','andrewbernard@trentu.ca','Andrew Bernard');
+INSERT INTO Student VALUES(1070,1975,'Oshawa','1957-07-04','stanleyhudson@trentu.ca','Stanley Hudson');
+INSERT INTO Student VALUES(1080,2019,'Peterborough','2001-08-21','angelamartin@trentu.ca','Angela Martin');
+INSERT INTO Student VALUES(1090,2018,'Durham','2000-09-30','oscarmartinez@trentu.ca','Oscar Martinez');
+INSERT INTO Student VALUES(1100,2018,'Peterborough','2000-10-25','kellykapoor@trentu.ca','Kelly Kapoor');
+COMMIT;
+sqlite> .dump Course
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Course(
+ CourseId INTEGER PRIMARY KEY AUTOINCREMENT,
+Year YEAR NULL,
+Credits INTEGER NOT NULL,
+Department VARCHAR(255) NOT NULL,
+DepartmentId INTEGER NOT NULL,
+CourseName VARCHAR(255) NOT NULL,
+Percentage DECIMAL(10,5) CHECK(Percentage BETWEEN 0 AND 100),
+CONSTRAINT UK_CourseName UNIQUE(CourseName),
+CONSTRAINT FK_Department_2_Course_CourseId FOREIGN KEY(DepartmentId)REFERENCES Course(CourseId)
+);
+INSERT INTO Course VALUES(1000,2006,1,'Chemistry',6030,'Introduction to Chemistry',57.70000000000000284);
+INSERT INTO Course VALUES(1001,2008,0.5,'Physics',6020,'Introduction to Physics I',67.70000000000000284);
+INSERT INTO Course VALUES(1002,2004,0.5,'Indigenous Studies',6050,'Critical Incidents in Indigenous Lives',54.100000000000001421);
+INSERT INTO Course VALUES(1005,2005,0.5,'Mathematics',6070,'Calculus I',79.900000000000005683);
+INSERT INTO Course VALUES(1010,2003,0.5,'Computer Science',6010,'Introduction to Computer Science',86.400000000000005684);
+INSERT INTO Course VALUES(1011,2010,0.5,'Forensic Science',6060,'Introduction to Forensic Science I',90.20000000000000284);
+INSERT INTO Course VALUES(1020,2002,1,'Biology',6040,'Introduction to Biology I',94.299999999999997157);
+INSERT INTO Course VALUES(1030,2000,1,'Nursing',6100,'Introduction to Nursing I',96.200000000000002843);
+INSERT INTO Course VALUES(1901,2011,1,'History',6090,'History of Science and Technology',77.900000000000005685);
+INSERT INTO Course VALUES(2010,2012,0.5,'Business Administration',6080,'Building Management Skills',83.299999999999997154);
+COMMIT;
+sqlite> .tables
+College     Course      Department  Professor   Student
+sqlite> .dump Department
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Department(
+DepartmentId INTEGER PRIMARY KEY AUTOINCREMENT,
+DepartmentHead VARCHAR(255) NOT NULL,
+DepartmentEmail VARCHAR(255) NOT NULL,
+DepartmentName VARCHAR(255) NOT NULL,
+CONSTRAINT UK_DepartmentName UNIQUE(DepartmentId)
+);
+INSERT INTO Department VALUES(6010,'Ned Stark','computerscience@trentu.ca','Computer Science');
+INSERT INTO Department VALUES(6020,'Theon Greyjoy','physics@trentu.ca','Physics');
+INSERT INTO Department VALUES(6030,'Jon Snow','chemistry@trentu.ca','Chemistry');
+INSERT INTO Department VALUES(6040,'Daenerys Targaryen','biology@trentu.ca','Biology');
+INSERT INTO Department VALUES(6050,'Cersei Lannister','indgstudies@trentu.ca','Indigenous Studies');
+INSERT INTO Department VALUES(6060,'Robert Baratheon','forensicscience@trentu.ca','Forensic Science');
+INSERT INTO Department VALUES(6070,'Catelyn Tully','math@trentu.ca','Mathematics');
+INSERT INTO Department VALUES(6080,'Jorah Mormont','admn@trentu.ca','Business Administration');
+INSERT INTO Department VALUES(6090,'Davos Seaworth','history@trentu.ca','History');
+INSERT INTO Department VALUES(6100,'Samwell Tarly','nursing@trentu.ca','Nursing');
+COMMIT;
+sqlite> .dump Professor
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Professor(
+ProfessorId INTEGER PRIMARY KEY AUTOINCREMENT,
+ProfessorEmail VARCHAR(255) NOT NULL,
+ContactNumber VARCHAR(255) NOT NULL,
+ProfessorName VARCHAR(255) NOT NULL,
+CONSTRAINT UK_ProfessorName UNIQUE(ProfessorName)
+);
+INSERT INTO Professor VALUES(8010,'rachelgreen@trentu.ca','705-123-4567','Rachel Green');
+INSERT INTO Professor VALUES(8020,'monicageller@trentu.ca','705-098-7654','Monica Geller');
+INSERT INTO Professor VALUES(8030,'pheobebuffay@trentu.ca','705-345-5678','Pheobe Buffay');
+INSERT INTO Professor VALUES(8040,'joeytribbiani@trentu.ca','705-623-6785','Joey Tribbiani');
+INSERT INTO Professor VALUES(8050,'chandlerbing@trentu.ca','705-234-7456','Chandler Bing');
+INSERT INTO Professor VALUES(8060,'rossgeller@trentu.ca','705-723-7484','Ross Geller');
+INSERT INTO Professor VALUES(8070,'janicelgh@trentu.ca','705-277-9777','Janice Litman-Goralnik Hosenstein');
+INSERT INTO Professor VALUES(8080,'ursualbuffay@trentu.ca','705-622-4182','Ursula Buffay');
+INSERT INTO Professor VALUES(8090,'richardburke@trentu.ca','705-186-7051','Richard Burke');
+INSERT INTO Professor VALUES(8100,'gunthersmith@trentu.ca','705-455-6126','Gunther Smith');
+COMMIT;
+sqlite> .dump College
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE College(
+CollegeId INTEGER PRIMARY KEY AUTOINCREMENT,
+CollegeAddress VARCHAR(255) NOT NULL,
+CollegeName VARCHAR(255) NOT NULL,
+CONSTRAINT UK_CollegeName UNIQUE(CollegeName)
+);
+INSERT INTO College VALUES(7010,'Peterborough','Peter Gzowski College');
+INSERT INTO College VALUES(7020,'Peterborough','Otonabee College');
+INSERT INTO College VALUES(7030,'Peterborough','Champlain College');
+INSERT INTO College VALUES(7040,'Peterborough','Lady Eaton College');
+INSERT INTO College VALUES(7050,'Peterborough','Catherine Par Traill');
+INSERT INTO College VALUES(7060,'Peterborough','Fleming College');
+INSERT INTO College VALUES(7070,'Toronto','Victoria College');
+INSERT INTO College VALUES(7080,'Toronto','Trinity College');
+INSERT INTO College VALUES(7090,'Toronto','St. Michaels College');
+INSERT INTO College VALUES(7100,'Toronto','Woodsworth College');
+COMMIT;
+sqlite>
